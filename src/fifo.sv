@@ -90,7 +90,7 @@ module fifo
 
   generate
     if (FWFT) begin
-      logic [WIDTH-1:0] ft_dout;
+      logic [WIDTH-1:0] din_q;
       logic             ft; // fallthrough
       logic             ft_continue;
 
@@ -99,14 +99,14 @@ module fifo
       always @(posedge clk) begin
         if (rst) begin
           ft_continue  <= 1'b0;
-          ft_dout      <= '0;
+          din_q        <= '0;
         end else begin
-          ft_dout     <= din;
+          din_q       <= din;
           ft_continue <= ft | (ft_continue & rd);
         end
       end
 
-      assign dout = ft | ft_continue ? ft_dout : fifo_dout;
+      assign dout = ft | ft_continue ? din_q : fifo_dout;
     end else begin
       always_ff @(posedge clk)
         dvld <= fifo_rd;
