@@ -102,23 +102,14 @@ module fifo
           ft_dout      <= '0;
         end else begin
           ft_dout     <= din;
-          ft_continue <= ft | (ft_continue & rd) ? 1 : 0;
+          ft_continue <= ft | (ft_continue & rd);
         end
       end
 
       assign dout = ft | ft_continue ? ft_dout : fifo_dout;
     end else begin
-      always_ff @(posedge clk) begin
-        if (rst) begin
-          dvld <= 1'b0;
-        end else begin
-          dvld <= 1'b0;
-
-          if (fifo_rd) begin
-            dvld <= 1'b1;
-          end
-        end
-      end
+      always_ff @(posedge clk)
+        dvld <= fifo_rd;
 
       assign dout = fifo_dout;
     end
